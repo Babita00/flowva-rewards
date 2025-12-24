@@ -1,0 +1,10 @@
+export const SUPABASE_CODES = {
+  INSUFFICIENT_PRIVILEGE: "42501",
+  UNIQUE_VIOLATION: "23505",
+
+  NO_ROWS_FOUND: "PGRST116",
+
+  SUCCESS: "SUCCESS",
+};
+
+export type SupabaseCode = (typeof SUPABASE_CODES)[keyof typeof SUPABASE_CODES];
