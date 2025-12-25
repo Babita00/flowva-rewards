@@ -1,42 +1,141 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* =========================
+   Light Mode (Default)
+========================= */
+:root {
+  --radius: 1rem;
+
+  /* Base */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.14 0.005 285);
+
+  /* Card */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.14 0.005 285);
+
+  /* Brand Colors */
+  --primary: oklch(62% 0.27 302); /* ≈ #9013fe */
+  --primary-foreground: oklch(98% 0 0);
+
+  --secondary: oklch(48% 0.23 292); /* ≈ #6D28D9 */
+  --secondary-foreground: oklch(98% 0 0);
+
+  /* UI */
+  --border: oklch(0.92 0.004 286);
+  --input: oklch(0.92 0.004 286);
+  --ring: oklch(62% 0.27 302);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* =========================
+   Dark Mode (Optional)
+========================= */
+.dark {
+  --background: oklch(0.14 0.005 285);
+  --foreground: oklch(0.98 0 0);
+
+  --card: oklch(0.2 0.01 285);
+  --card-foreground: oklch(0.98 0 0);
+
+  --primary: oklch(70% 0.25 302);
+  --primary-foreground: oklch(20% 0.02 285);
+
+  --secondary: oklch(55% 0.22 292);
+  --secondary-foreground: oklch(98% 0 0);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(70% 0.25 302);
+}
+
+/* =========================
+   Base Styles
+========================= */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-  to {
-    transform: rotate(360deg);
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: Inter, system-ui, sans-serif;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* =========================
+   Auth Page Styling
+========================= */
+
+/* Purple gradient background */
+.auth-gradient {
+  background: linear-gradient(135deg, #9013fe 0%, #6d28d9 100%);
 }
 
-.card {
-  padding: 2em;
+/* Card polish */
+[data-slot="card"] {
+  @apply shadow-2xl border-none;
 }
 
-.read-the-docs {
-  color: #888;
+/* Titles */
+[data-slot="card-title"] {
+  @apply text-3xl font-bold tracking-tight text-secondary;
+}
+
+/* Descriptions */
+[data-slot="card-description"] {
+  @apply text-muted-foreground;
+}
+
+/* Inputs */
+input {
+  @apply h-12 rounded-xl text-sm transition-all;
+}
+
+input:focus {
+  box-shadow: 0 0 0 3px rgba(144, 19, 254, 0.25);
+}
+
+/* Primary button (Sign in / Sign up) */
+button[type="submit"] {
+  @apply h-12 rounded-full font-semibold text-white transition-all;
+  background: linear-gradient(135deg, #9013fe, #6d28d9);
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Toggle links */
+.auth-link {
+  @apply text-primary font-medium hover:underline;
 }
