@@ -14,6 +14,7 @@ import type { Reward } from "../../types/reward.types"
 import { useUser } from "../../hooks/useUser"
 import { supabase } from "../../lib/supabaseClient"
 import { handleSupabaseError } from "../../utils/supabaseErrorHandler"
+import { toast } from "sonner"
 
 interface RedeemModalProps {
   reward: Reward | null
@@ -40,12 +41,11 @@ interface RedeemModalProps {
       handleSupabaseError(error, {
         context: "Redeeming reward",
         fallbackMessage: "Redemption failed. Please try again.",
-        onError: (msg) => alert(msg), // Replace with toast later
+        onError: (msg) => toast(msg), 
       })
-      // Rollback not needed — atomic function already rolled back
     } else if (data.success) {
-      await refetchBalance() // Triggers realtime update too
-      alert("Reward redeemed successfully! Check your email or dashboard.")
+      await refetchBalance() 
+      toast("Reward redeemed successfully! Check your email or dashboard.")
       onOpenChange(false)
     }
 

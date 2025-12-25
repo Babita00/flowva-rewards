@@ -1,6 +1,6 @@
 
-import type { Reward } from "../../hooks/useRewards";
 import { useUser } from "../../hooks/useUser";
+import type { Reward } from "../../types/reward.types";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
