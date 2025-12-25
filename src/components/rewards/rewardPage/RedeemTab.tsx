@@ -25,12 +25,27 @@ export default function RedeemTab({
   const filteredRedeemRewards = rewards.filter((r) => {
     if (redeemFilter === "all") return !r.is_coming_soon;
     if (redeemFilter === "unlocked")
-      return balance >= r.cost_in_coins && !r.is_coming_soon;
+      return !r.is_coming_soon && balance >= r.cost_in_coins;
     if (redeemFilter === "locked")
-      return balance < r.cost_in_coins && !r.is_coming_soon;
-    if (redeemFilter === "coming") return r.is_coming_soon === true;
+      return !r.is_coming_soon && balance < r.cost_in_coins;
+    if (redeemFilter === "coming")
+      return r.is_coming_soon === true;
+
     return true;
   });
+  const counts = {
+    all: rewards.filter((r) => !r.is_coming_soon).length,
+
+    unlocked: rewards.filter(
+      (r) => !r.is_coming_soon && balance >= r.cost_in_coins
+    ).length,
+
+    locked: rewards.filter(
+      (r) => !r.is_coming_soon && balance < r.cost_in_coins
+    ).length,
+
+    coming: rewards.filter((r) => r.is_coming_soon).length,
+  };
 
   return (
     <>
@@ -41,49 +56,29 @@ export default function RedeemTab({
         className="mb-8"
       >
         <TabsList className="flex w-full max-w-3xl gap-10 bg-transparent">
-          {(() => {
-            const counts = {
-              all: rewards.length,
+          <RewardTabTrigger
+            value="all"
+            label="All Rewards"
+            count={counts.all}
+          />
 
-              coming: rewards.filter((reward) => reward.is_coming_soon).length,
+          <RewardTabTrigger
+            value="unlocked"
+            label="Unlocked"
+            count={counts.unlocked}
+          />
 
-              unlocked: rewards.filter(
-                (reward) => !reward.is_coming_soon && reward.stock_quantity > 0
-              ).length,
+          <RewardTabTrigger
+            value="locked"
+            label="Locked"
+            count={counts.locked}
+          />
 
-              locked: rewards.filter(
-                (reward) => !reward.is_coming_soon && reward.stock_quantity === 0
-              ).length,
-            };
-
-            return (
-              <>
-                <RewardTabTrigger
-                  value="all"
-                  label="All Rewards"
-                  count={counts.all}
-                />
-
-                <RewardTabTrigger
-                  value="unlocked"
-                  label="Unlocked"
-                  count={counts.unlocked}
-                />
-
-                <RewardTabTrigger
-                  value="locked"
-                  label="Locked"
-                  count={counts.locked}
-                />
-
-                <RewardTabTrigger
-                  value="coming"
-                  label="Coming Soon"
-                  count={counts.coming}
-                />
-              </>
-            );
-          })()}
+          <RewardTabTrigger
+            value="coming"
+            label="Coming Soon"
+            count={counts.coming}
+          />
         </TabsList>
       </Tabs>
 
@@ -104,7 +99,11 @@ export default function RedeemTab({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredRedeemRewards.map((reward) => (
-            <RewardCard key={reward.id} reward={reward} onRedeem={onRedeem} />
+            <RewardCard
+              key={reward.id}
+              reward={reward}
+              onRedeem={onRedeem}
+            />
           ))}
         </div>
       )}

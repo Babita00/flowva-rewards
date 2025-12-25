@@ -1,55 +1,68 @@
 
-import { useUser } from "../../hooks/useUser";
+import { Coins, Gift, DollarSign, Laptop, BookOpen } from "lucide-react"; 
 import type { Reward } from "../../types/reward.types";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { useUser } from "../../hooks/useUser";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { Coins } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface RewardCardProps {
-  reward: Reward;
+  reward: Reward & { is_coming_soon?: boolean }; 
   onRedeem: (reward: Reward) => void;
 }
 
 export function RewardCard({ reward, onRedeem }: RewardCardProps) {
-  const { balance } = useUser(); 
+  const { balance } = useUser();
 
   const isAffordable = balance !== null && balance >= reward.cost_in_coins;
   const isOutOfStock = reward.stock_quantity <= 0;
+  const isComingSoon = reward.is_coming_soon === true;
+
+  const getIcon = () => {
+    switch (reward.category) {
+      case "giftcard":
+      case "popular":
+        return <Gift className="w-12 h-12 text-purple-600" />;
+      case "cashback":
+        return <DollarSign className="w-12 h-12 text-green-600" />;
+      case "tool":
+        return reward.title.toLowerCase().includes("course") ? 
+          <BookOpen className="w-12 h-12 text-indigo-600" /> : 
+          <Laptop className="w-12 h-12 text-blue-600" />;
+      default:
+        return <Gift className="w-12 h-12 text-purple-600" />;
+    }
+  };
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
-      <div className="aspect-video relative">
-        <img
-          src={reward.image_url}
-          alt={reward.title}
-          className="object-cover w-full h-full"
-        />
-        {isOutOfStock && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <Badge variant="destructive" className="text-lg px-4 py-2">
-              Sold Out
-            </Badge>
-          </div>
-        )}
+    <Card className="overflow-hidden transition-all hover:shadow-xl border-0 shadow-lg">
+      <div className="py-6 bg-purple-50/50">
+        <div className="w-10 h-10 mx-auto bg-purple-100 rounded-lg p-2 flex items-center justify-center">
+          {getIcon()}
+        </div>
       </div>
-      <CardHeader>
-        <CardTitle className="line-clamp-2">{reward.title}</CardTitle>
-        <CardDescription className="line-clamp-3">
+
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg line-clamp-2 text-center">{reward.title}</CardTitle>
+        <CardDescription className="text-sm line-clamp-3 text-center text-gray-600">
           {reward.description}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex justify-between items-center">
-        <div className="flex items-center gap-2 text-lg font-bold text-amber-600">
+
+      <CardFooter className="flex flex-col gap-4 pt-4">
+        <div className="flex items-center justify-center gap-2 text-xl font-bold text-amber-600">
           <Coins className="w-6 h-6" />
-          {reward.cost_in_coins.toLocaleString()}
+          {reward.cost_in_coins.toLocaleString()} pts
         </div>
+
         <Button
-          onClick={() => onRedeem(reward)}
-          disabled={!isAffordable || isOutOfStock}
-          variant={isAffordable ? "default" : "secondary"}
+          className="w-full mb-4 rounded-lg py-6 bg-gray-300"
+          disabled={!isAffordable || isOutOfStock || isComingSoon}
+          variant={isAffordable && !isOutOfStock && !isComingSoon ? "default" : "secondary"}
+          onClick={() => onRedeem(reward)}  
         >
-          {isOutOfStock ? "Sold Out" : isAffordable ? "Redeem" : "Not Enough Coins"}
+          {isComingSoon ? "Coming Soon" :
+           isOutOfStock ? "Sold Out" :
+           isAffordable ? "Redeem" : "Locked"}
         </Button>
       </CardFooter>
     </Card>
