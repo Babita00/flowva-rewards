@@ -6,4 +6,6 @@ export type Reward = {
   image_url: string;
   category: string;
   stock_quantity: number;
+  created_at?: string;
+  is_coming_soon?: boolean;
 };
