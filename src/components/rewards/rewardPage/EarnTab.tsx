@@ -1,3 +1,4 @@
+import SectionHeading from "../../shared/SectionHeading";
 import DailyStreakCard from "./DailyStreakCard";
 import FeaturedRewardCard from "./FeaturedRewardCard";
 import PointsBalanceCard from "./PointsBalanceCard";
@@ -5,9 +6,7 @@ import PointsBalanceCard from "./PointsBalanceCard";
 export default function EarnTab({ balance }: { balance: number }) {
   return (
     <>
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
-        Your Rewards Journey
-      </h2>
+      <SectionHeading title="Your Rewards Journey" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <PointsBalanceCard balance={balance} />
