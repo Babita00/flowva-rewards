@@ -2,6 +2,8 @@ import SectionHeading from "../../shared/SectionHeading";
 import DailyStreakCard from "./DailyStreakCard";
 import FeaturedRewardCard from "./FeaturedRewardCard";
 import PointsBalanceCard from "./PointsBalanceCard";
+import ReferralCard from "../ReferralCard";
+import EarnMorePoints from "../EarnMorePoints";
 
 export default function EarnTab({ balance }: { balance: number }) {
   return (
@@ -13,12 +15,12 @@ export default function EarnTab({ balance }: { balance: number }) {
         <DailyStreakCard />
         <FeaturedRewardCard />
       </div>
+      <div className="mt-2">
+        <EarnMorePoints />
+      </div>
 
-      <h2 className="text-2xl font-bold text-purple-700 mt-12">
-        Earn More Points
-      </h2>
-      <div className="text-center text-gray-500 py-8">
-        More ways to earn coming soon...
+      <div className="mt-2">
+        <ReferralCard />
       </div>
     </>
   );

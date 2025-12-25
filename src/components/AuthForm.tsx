@@ -52,25 +52,34 @@ export function AuthForm() {
   const onSubmit = async (data: AuthFormData) => {
     setLoading(true);
 
-    const { error } = isSignUp
-      ? await supabase.auth.signUp({
-          email: data.email,
-          password: data.password,
-        })
-      : await supabase.auth.signInWithPassword({
-          email: data.email,
-          password: data.password,
-        });
+    if (isSignUp) {
+      const { data: signUpData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
 
-    if (error) {
-      toast("Error: " + error.message);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        if (!signUpData.session) {
+          toast.success("Signup successful! Please confirm your email");
+        } else {
+          toast.success("Signup successful! You are now logged in.");
+        }
+        reset();
+      }
     } else {
-      toast(
-        isSignUp
-          ? "Sign up successful! Check your email."
-          : "Logged in successfully!"
-      );
-      reset();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Logged in successfully!");
+        reset();
+      }
     }
 
     setLoading(false);
@@ -92,7 +101,6 @@ export function AuthForm() {
 
         <CardContent className="px-8 pb-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Email */}
             <div className="space-y-2">
               <Label>Email</Label>
               <Input
@@ -106,7 +114,6 @@ export function AuthForm() {
               )}
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <Label>Password</Label>
               <div className="relative">
@@ -131,7 +138,6 @@ export function AuthForm() {
               )}
             </div>
 
-            {/* Confirm Password (signup only) */}
             {isSignUp && (
               <div className="space-y-2">
                 <Label>Confirm Password</Label>
@@ -144,9 +150,7 @@ export function AuthForm() {
                   />
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-[#9013fe] hover:underline"
                   >
                     {showConfirmPassword ? "Hide" : "Show"}
@@ -160,7 +164,6 @@ export function AuthForm() {
               </div>
             )}
 
-            {/* Forgot password */}
             {!isSignUp && (
               <div className="text-right text-sm">
                 <button
@@ -172,7 +175,6 @@ export function AuthForm() {
               </div>
             )}
 
-            {/* Submit */}
             <Button
               type="submit"
               disabled={loading}
@@ -182,14 +184,12 @@ export function AuthForm() {
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="my-6 flex items-center gap-4">
             <Separator className="flex-1" />
             <span className="text-sm text-muted-foreground">or</span>
             <Separator className="flex-1" />
           </div>
 
-          {/* Toggle */}
           <p className="text-center text-sm text-muted-foreground">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
