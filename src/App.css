@@ -48,9 +48,6 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* =========================
-   Light Mode (Default)
-========================= */
 :root {
   --radius: 0.625rem;
 
@@ -95,9 +92,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* =========================
-   Dark Mode (Optional)
-========================= */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -136,9 +130,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* =========================
-   Base Styles
-========================= */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -150,31 +141,22 @@
   }
 }
 
-/* =========================
-   Auth Page Styling
-========================= */
-
-/* Purple gradient background */
 .auth-gradient {
   background: linear-gradient(135deg, #9013fe 0%, #6d28d9 100%);
 }
 
-/* Card polish */
 [data-slot="card"] {
   @apply shadow-2xl border-none;
 }
 
-/* Titles */
 [data-slot="card-title"] {
   @apply text-3xl font-bold tracking-tight text-secondary;
 }
 
-/* Descriptions */
 [data-slot="card-description"] {
   @apply text-muted-foreground;
 }
 
-/* Inputs */
 input {
   @apply h-12 rounded-xl text-sm transition-all;
 }
@@ -183,7 +165,6 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(144, 19, 254, 0.25);
 }
 
-/* Primary button (Sign in / Sign up) */
 button[type="submit"] {
   @apply h-12 rounded-full font-semibold text-white transition-all;
   background: linear-gradient(135deg, #9013fe, #6d28d9);
@@ -198,7 +179,6 @@ button[type="submit"]:active {
   transform: translateY(0);
 }
 
-/* Toggle links */
 .auth-link {
   @apply text-primary font-medium hover:underline;
 }
